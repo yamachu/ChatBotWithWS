@@ -11,7 +11,7 @@ using ChatBotWithWS.Models;
 using Newtonsoft.Json;
 using ChatBotWithWS.Models.ChatCommands;
 
-namespace ChatBotWithWS.WebSockets.Services
+namespace ChatBotWithWS.Services
 {
     public interface IChatService
     {

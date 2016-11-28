@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
-using ChatBotWithWS.WebSockets.Services;
+using ChatBotWithWS.Services;
 
 namespace ChatBotWithWS
 {
@@ -32,7 +32,7 @@ namespace ChatBotWithWS
             // Add framework services.
             services.AddMvc();
 
-            services.AddSingleton<WebSockets.Services.IChatService, WebSockets.Services.ChatService>();
+            services.AddSingleton<IChatService, ChatService>();
         }
 
 
