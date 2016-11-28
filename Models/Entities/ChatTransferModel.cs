@@ -21,8 +21,14 @@ namespace ChatBotWithWS.Models.Entities
         [JsonProperty("success")]
         public bool Success;
 
+        #region WillSupport
         [JsonProperty("from")]
         [DefaultValue("anonymous")]
+        [JsonIgnore]
         public string From {get;set;} = "anonymous";
+
+        [JsonIgnore]
+        public bool SecretMessage{get;set;} = false;
+        #endregion
     }
 }

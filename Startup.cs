@@ -30,7 +30,7 @@ namespace ChatBotWithWS
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            // services.AddMvc();
+            services.AddMvc();
 
             services.AddSingleton<WebSockets.Services.IChatService, WebSockets.Services.ChatService>();
         }

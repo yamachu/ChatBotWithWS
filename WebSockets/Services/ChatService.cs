@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ChatBotWithWS.Models;
 using Newtonsoft.Json;
+using ChatBotWithWS.Models.ChatCommands;
 
 namespace ChatBotWithWS.WebSockets.Services
 {
@@ -67,20 +68,30 @@ namespace ChatBotWithWS.WebSockets.Services
                     case WebSocketMessageType.Text:
                     // recieve
                     var request = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-                    var json_d = JsonConvert.DeserializeObject<Models.Entities.ChatRecieveModel>(request);
+                    Models.Entities.ChatRecieveModel json_d;
+                    try {
+                        json_d = JsonConvert.DeserializeObject<Models.Entities.ChatRecieveModel>(request);
+                    } catch(Exception ex) {
+                        System.Console.WriteLine("Unexpected Format");
+                        System.Console.WriteLine(ex.StackTrace);
+                        break;
+                    }
 
-                    // transfer
-                    var trans_m = new Models.Entities.ChatTransferModel
-                    {
-                        Text = json_d.Text,
-                        MessageType = Models.Entities.ChatMessageType.Message,
-                        Success = true
-                    };
-                    var response = JsonConvert.SerializeObject(trans_m);
-                    var sendingData = Encoding.UTF8.GetBytes(response);
-                    var sendingBuffer = new ArraySegment<byte>(sendingData);
+                    await Echo(json_d);
 
-                    await SendBroadcast(sendingBuffer);
+                    // bot command
+                    var commandModel = CommandHelper.isValidCommandFormat(json_d.Text);
+                    if (commandModel == null) break;
+
+                    var transfer = CommandRunner.GenerateResponse(commandModel);
+
+                    // 自分だけに返したいコマンドができたら使う
+                    if (!transfer.SecretMessage) {
+                        await TransferAsync(transfer);
+                    } else {
+                        await TransferAsync(transfer, user.Socket);
+                    }
+
                     break;
 
                     case WebSocketMessageType.Close:
@@ -95,9 +106,43 @@ namespace ChatBotWithWS.WebSockets.Services
         async private Task SendBroadcast(ArraySegment<Byte> buffer, WebSocketMessageType messageType = WebSocketMessageType.Text)
         {
             var token = CancellationToken.None;
-            // ForEachだと死んだコネクションも拾ってしまうかも
+            // 一個コネクション死んでたら死ぬかも
             await Task.WhenAll(websockets.Where(x => x?.Socket?.State == WebSocketState.Open)
                         .Select(x => x.Socket.SendAsync(buffer, messageType, true, token)));
-        } 
+        }
+
+        async private Task SendUser(ArraySegment<Byte> buffer, WebSocket socket, WebSocketMessageType messageType = WebSocketMessageType.Text)
+        {
+            var token = CancellationToken.None;
+            await socket.SendAsync(buffer, messageType, true, token);
+        }
+
+        async private Task TransferAsync(Models.Entities.ChatTransferModel model, WebSocket user = null, WebSocketMessageType messageType = WebSocketMessageType.Text)
+        {
+            var response = JsonConvert.SerializeObject(model);
+            var sendingData = Encoding.UTF8.GetBytes(response);
+            var sendingBuffer = new ArraySegment<byte>(sendingData);
+
+            if (user == null) {
+                await SendBroadcast(sendingBuffer, messageType);
+            } else {
+                await SendUser(sendingBuffer, user, messageType);
+            }
+        }
+
+        async private Task Echo(Models.Entities.ChatRecieveModel request)
+        {
+            var trans_m = new Models.Entities.ChatTransferModel
+            {
+                Text = request.Text,
+                MessageType = Models.Entities.ChatMessageType.Message,
+                Success = true
+            };
+            var response = JsonConvert.SerializeObject(trans_m);
+            var sendingData = Encoding.UTF8.GetBytes(response);
+            var sendingBuffer = new ArraySegment<byte>(sendingData);
+
+            await SendBroadcast(sendingBuffer);
+        }
     }
 }
