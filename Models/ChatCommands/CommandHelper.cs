@@ -24,7 +24,7 @@ namespace ChatBotWithWS.Models.ChatCommands
         private static CommandModel isValidCommonMention(string body)
         {
             const string Pattern = @"^(?<target>\S+)\s+(?<command>\w+)\s*(?<args>.*)$";
-            var re = new Regex(Pattern, RegexOptions.Compiled| RegexOptions.Multiline);
+            var re = new Regex(Pattern, RegexOptions.Compiled| RegexOptions.Singleline);
 
             var match = re.Match(body);
             if (!match.Success) return null;
@@ -44,7 +44,8 @@ namespace ChatBotWithWS.Models.ChatCommands
         private static CommandModel isValidSpecialMention(string body)
         {
             const string Pattern = @"^(?<target>\S+:)\s*(?<command>\w+)\s*(?<args>.*)$";
-            var re = new Regex(Pattern, RegexOptions.Compiled| RegexOptions.Multiline);
+            // SingleLineにすると改行を許す -> csx用
+            var re = new Regex(Pattern, RegexOptions.Compiled| RegexOptions.Singleline);
 
             var match = re.Match(body);
             if (!match.Success) return null;

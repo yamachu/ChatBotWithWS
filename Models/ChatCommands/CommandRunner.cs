@@ -47,7 +47,6 @@ namespace ChatBotWithWS.Models.ChatCommands
 
         public static Models.Entities.ChatTransferModel GenerateResponse(CommandModel model)
         {
-            // gen help model...
             if (!isContains(model.Command)) {
                 return new Models.ChatCommands.Commands.Undefined().Run(model);
             } 
