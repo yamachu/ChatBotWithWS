@@ -6,11 +6,6 @@ namespace ChatBotWithWS.Models.ChatCommands
 {
     public class CommandHelper
     {
-        private static string[] CommandList = {
-            "ping",
-            "help",
-        };
-
         private static string[] BotAcceptCommon = {
             "@bot",
             "bot",
@@ -35,7 +30,6 @@ namespace ChatBotWithWS.Models.ChatCommands
             if (!match.Success) return null;
 
             if (!BotAcceptCommon.Contains(match.Groups["target"].Value.ToLower())) return null;
-            // if (!CommandList.Contains(match.Groups["command"].Value.ToLower())) return null;
             
             var command = new CommandModel()
             {
@@ -56,7 +50,6 @@ namespace ChatBotWithWS.Models.ChatCommands
             if (!match.Success) return null;
 
             if (!BotAcceptSpecial.Contains(match.Groups["target"].Value.ToLower())) return null;
-            // if (!CommandList.Contains(match.Groups["command"].Value.ToLower())) return null;
             
             var command = new CommandModel()
             {
