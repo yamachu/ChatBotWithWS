@@ -11,3 +11,9 @@ ASP.NET Core上で動く簡易ChatBot．テンプレートはyo aspnetで作成�
 * エラーハンドリング
 * Viewをデフォルトじゃないものに変える
 * etc...
+
+## 小技
+[wscat](https://www.npmjs.com/package/wscat)使えばデバッグそこそこ楽な気がする．
+
+## 小言
+https://github.com/aspnet/WebSockets/issues/63 で詰まることもあるのでWebSocket使う人は注意
