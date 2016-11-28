@@ -74,6 +74,13 @@ namespace ChatBotWithWS.WebSockets.Services
                     } catch(Exception ex) {
                         System.Console.WriteLine("Unexpected Format");
                         System.Console.WriteLine(ex.StackTrace);
+                        var error_msg = new Models.Entities.ChatTransferModel()
+                        {
+                            Text = "Unexpected format, require json => {text:\"FooBar\"}",
+                            MessageType = Models.Entities.ChatMessageType.Bot,
+                            Success = false
+                        };
+                        await TransferAsync(error_msg, user.Socket);
                         break;
                     }
 
