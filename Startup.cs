@@ -25,6 +25,7 @@ namespace ChatBotWithWS
         }
 
         public IConfigurationRoot Configuration { get; }
+        public static IServiceProvider Services{get;private set;}
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,6 +34,9 @@ namespace ChatBotWithWS
             services.AddMvc();
 
             services.AddSingleton<IChatService, ChatService>();
+            services.AddSingleton<ICSXEvalService, CSXEvalService>();
+
+            Services = services.BuildServiceProvider();
         }
 
 

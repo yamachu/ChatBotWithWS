@@ -4,36 +4,31 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using ChatBotWithWS.Models;
+using System.Threading.Tasks;
 namespace ChatBotWithWS.Models.ChatCommands
 {
     public enum _Command {
         PING,
+        CSX,
         HELP,
     }
 
     static class _CommandExt
     {
-        static List<IChatCommand> CommandInterfaces;
+        static List<Tuple<string, Type>> commands = new List<Tuple<string, Type>> {
+            {"ping", typeof(Commands.Ping)},
+            {"csx", typeof(Commands.CSX)},
+            {"help", typeof(Commands.Help)}
+        };
+
         public static string DisplayName(this _Command command)
         {
-            string[] commands = {
-                "ping",
-                "help"
-            };
-
-            return commands[(int)command];
+            return commands[(int)command].Item1;
         }
 
         public static IChatCommand CommandInterface(this _Command command)
         {
-            return CommandInterfaces[(int)command];
-        }
-
-        static _CommandExt()
-        {
-            CommandInterfaces = new List<IChatCommand>();
-            CommandInterfaces.Add(new Models.ChatCommands.Commands.Ping());
-            CommandInterfaces.Add(new Models.ChatCommands.Commands.Help());
+            return Activator.CreateInstance(commands[(int)command].Item2) as IChatCommand;
         }
     }
 
@@ -45,16 +40,16 @@ namespace ChatBotWithWS.Models.ChatCommands
             .Count(s => s.DisplayName() == command_str) > 0;
         }
 
-        public static Models.Entities.ChatTransferModel GenerateResponse(CommandModel model)
+        public async static Task<Models.Entities.ChatTransferModel> GenerateResponse(CommandModel model)
         {
             if (!isContains(model.Command)) {
-                return new Models.ChatCommands.Commands.Undefined().Run(model);
+                return await new Models.ChatCommands.Commands.Undefined().Run(model);
             } 
                 
             var target = EnumUtil<_Command>.Enumerate()
                 .First(s => s.DisplayName() == model.Command);
 
-            return target.CommandInterface().Run(model);
+            return await target.CommandInterface().Run(model);
         }
     }
 

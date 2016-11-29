@@ -90,7 +90,7 @@ namespace ChatBotWithWS.Services
                     var commandModel = CommandHelper.isValidCommandFormat(json_d.Text);
                     if (commandModel == null) break;
 
-                    var transfer = CommandRunner.GenerateResponse(commandModel);
+                    var transfer = await CommandRunner.GenerateResponse(commandModel);
 
                     // 自分だけに返したいコマンドができたら使う
                     if (!transfer.SecretMessage) {
