@@ -7,16 +7,16 @@ namespace ChatBotWithWS.Models
 {
     public class ChatUser
     {
-        public WebSocket Socket{get; private set;}
-
         // Will support user-name and chat-room
         public string Name{get;set;}
 
         public string Room{get;set;}
 
-        public ChatUser(WebSocket socket)
+        public int UserHash{get;private set;}
+
+        public ChatUser(int hash)
         {
-            Socket = socket;
+            UserHash = hash;
         }
     }
 }

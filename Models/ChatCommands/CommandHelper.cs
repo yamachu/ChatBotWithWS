@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ChatBotWithWS.Models.Entities;
 
 namespace ChatBotWithWS.Models.ChatCommands
 {
@@ -21,6 +22,15 @@ namespace ChatBotWithWS.Models.ChatCommands
                 ?? isValidSpecialMention(body);
         }
 
+        public static CommandModel isValidCommandFormat(ChatRecieveModel model)
+        {
+            var tmp = isValidCommandFormat(model.Text);
+            if (tmp != null) {
+                tmp.Code = model.CSX;
+            }
+            return tmp;
+        }
+
         private static CommandModel isValidCommonMention(string body)
         {
             const string Pattern = @"^(?<target>\S+)\s+(?<command>\w+)\s*(?<args>.*)$";
@@ -35,7 +45,7 @@ namespace ChatBotWithWS.Models.ChatCommands
             {
                 Target = match.Groups["target"].Value.ToLower(),
                 Command = match.Groups["command"].Value.ToLower(),
-                Args = match.Groups["args"]?.Value?.ToLower()
+                Args = match.Groups["args"]?.Value?.ToLower(),
             };
 
             return command;

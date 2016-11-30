@@ -90,6 +90,7 @@ namespace ChatBotWithWS.Services
             throw new NotImplementedException();
         }
 
+        // support description or usage?
         public async Task<EvalResult> SafeScriptEval(ScriptEntry entry, CommandModel args)
         {
             if (entry.ScriptBody == null) return new EvalResult()

@@ -1,13 +1,9 @@
-FROM microsoft/dotnet:latest
+FROM microsoft/aspnetcore:1.0.1
 
-COPY . /app
+COPY ./out/ /app
 
 WORKDIR /app
 
-RUN ["dotnet", "restore"]
+EXPOSE 80
 
-RUN ["dotnet", "build"]
-
-EXPOSE 5000/tcp
-
-CMD ["dotnet", "run", "--server.urls", "http://*:5000"]
+ENTRYPOINT ["dotnet", "ChatBotWithWS.dll"]

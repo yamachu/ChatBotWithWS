@@ -24,7 +24,9 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "Microsoft.AspNetCore.WebSockets.Server": "0.1.0",
     "Newtonsoft.Json": "9.0.1",
-    "Microsoft.CodeAnalysis.CSharp.Scripting": "2.0.0-rc"
+    "Microsoft.CodeAnalysis.CSharp.Scripting": "2.0.0-rc",
+    "System.Reactive": "3.1.1",
+    "System.Reactive.Linq": "3.1.1"
   },
 
   "tools": {

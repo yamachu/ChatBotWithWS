@@ -32,7 +32,9 @@ namespace ChatBotWithWS.Models.ChatCommands.Commands
 
         public string Usage()
         {
-            return "<commadName> [args]";
+            return @"eval [args] => when use playground(require json field 'code')
+                    run <commandName> [args] => when use saved command
+                    list or ls => list saved command";
         }
     }
 }
