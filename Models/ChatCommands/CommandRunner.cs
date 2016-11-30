@@ -15,7 +15,7 @@ namespace ChatBotWithWS.Models.ChatCommands
 
     static class _CommandExt
     {
-        static List<Tuple<string, Type>> commands = new List<Tuple<string, Type>> {
+        static List<Tuple<string, Type>> CommandList = new List<Tuple<string, Type>> {
             {"ping", typeof(Commands.Ping)},
             {"csx", typeof(Commands.CSX)},
             {"help", typeof(Commands.Help)}
@@ -23,12 +23,12 @@ namespace ChatBotWithWS.Models.ChatCommands
 
         public static string DisplayName(this _Command command)
         {
-            return commands[(int)command].Item1;
+            return CommandList[(int)command].Item1;
         }
 
         public static IChatCommand CommandInterface(this _Command command)
         {
-            return Activator.CreateInstance(commands[(int)command].Item2) as IChatCommand;
+            return Activator.CreateInstance(CommandList[(int)command].Item2) as IChatCommand;
         }
     }
 
