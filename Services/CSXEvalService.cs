@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using ChatBotWithWS.Models;
-using Newtonsoft.Json;
 using ChatBotWithWS.Models.ChatCommands;
 using ChatBotWithWS.Models.CSXEvals;
 using System.Reflection;
@@ -19,17 +14,11 @@ namespace ChatBotWithWS.CSXEvals.Global
 {
     public class Globals
     {
-        public Globals(string arg)
+        public Globals(string[] args)
         {
-            BaseArguments = arg;
+            Args = args;
         }
-        public IEnumerable<string> Args
-        {
-            get {
-                return BaseArguments.Split(' ').Skip(1);
-            }
-        }
-        public string BaseArguments{get;private set;}
+        public string[] Args {get; private set;}
     }
 }
 
@@ -39,7 +28,7 @@ namespace ChatBotWithWS.Services
     {
         void DebugLog(string message);
         Task HandleConnection(HttpContext context);
-        Task<EvalResult> SafeScriptEval(ScriptEntry entry, CommandModel args);
+        Task<EvalResult> SafeScriptEval(ScriptEntry entry);
     }
 
     public class CSXEvalService : ICSXEvalService
@@ -91,15 +80,15 @@ namespace ChatBotWithWS.Services
         }
 
         // support description or usage?
-        public async Task<EvalResult> SafeScriptEval(ScriptEntry entry, CommandModel args)
+        public async Task<EvalResult> SafeScriptEval(ScriptEntry entry)
         {
-            if (entry.ScriptBody == null) return new EvalResult()
+            if (entry.ScriptBody == null || entry.ScriptBody == "") return new EvalResult()
             {
                 Result = "コードが空です",
                 Success = false,
             }; 
 
-            var globals = new ChatBotWithWS.CSXEvals.Global.Globals(args.Args);
+            var globals = new ChatBotWithWS.CSXEvals.Global.Globals(entry.Args);
 
             var cts = new CancellationTokenSource();
 
