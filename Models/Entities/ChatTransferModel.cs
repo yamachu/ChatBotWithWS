@@ -1,8 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace ChatBotWithWS.Models.Entities
