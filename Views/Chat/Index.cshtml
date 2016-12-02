@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "ChatRoom";
+}
+
+@section scripts{
+    <script src="@Url.Content("~/js/client.js")" type="text/javascript"></script>
+}
+
+<!--<div class="container messages">-->
+    <ul id="messages" class="ul messages" style="height: calc(100vh - (100px + 50px)); overflow-x: hidden;"></ul>
+<!--</div>-->
+<!--<div class="container msgform">-->
+    <form action="#" class="form msgform" style="bottom: 0;height: 100px;position: fixed;">
+        <input id="m" autocomplete="off" class="input"/>
+        <button class="submit button" type="submit">@ViewData["Room"]</button>
+    </form>
+<!--</div>-->

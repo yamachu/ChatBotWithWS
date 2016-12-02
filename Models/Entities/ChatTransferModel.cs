@@ -22,6 +22,8 @@ namespace ChatBotWithWS.Models.Entities
         public string Type => MessageType.DisplayName();
         [JsonProperty("success", Required = Required.Always)]
         public bool Success;
+        [JsonIgnore]
+        public string Room;
 
         #region WillSupport
         [JsonProperty("from")]

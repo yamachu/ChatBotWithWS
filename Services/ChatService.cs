@@ -17,7 +17,7 @@ namespace ChatBotWithWS.Services
     public interface IChatService
     {
         void DebugLog(string message);
-        Task HandleConnection(HttpContext context);
+        Task HandleConnection(HttpContext context, string room = "Global");
     }
 
     // ref https://github.com/aspnet/WebSockets/tree/dev/samples/EchoApp
@@ -38,7 +38,7 @@ namespace ChatBotWithWS.Services
             System.Console.WriteLine(message);
         }
 
-        async public Task HandleConnection(HttpContext context)
+        async public Task HandleConnection(HttpContext context, string room = "Global")
         {
             WeakReference<WebSocket> WeakSocket;
             {
@@ -52,11 +52,11 @@ namespace ChatBotWithWS.Services
             
             #region TODO
             user.Name = System.Guid.NewGuid().ToString().Substring(0, 5);
-            user.Room = "Global";
             #endregion
-
+            user.Room = room;
+            
             var MyBroadcastStream = MessageSubject
-            .Where(o => !o.Target.HasValue || o.Target.HasValue && o.Target.Value == user.UserHash)
+            .Where(o => (o.Room == user.Room) && (!o.Target.HasValue || (o.Target.HasValue && o.Target.Value == user.UserHash)))
             .Subscribe(async s => {
                 var response = JsonConvert.SerializeObject(s);
                 var sendingData = Encoding.UTF8.GetBytes(response);
@@ -116,12 +116,14 @@ namespace ChatBotWithWS.Services
                         System.Console.Error.WriteLine(ex.StackTrace);
 
                         var error_msg = ChatTransferModel.CreateModel(ChatTransferModelType.FORMAT_ERROR, user.UserHash);
+                        error_msg.Room = user.Room;
 
                         MessageSubject.OnNext(error_msg);
                         break;
                     }
 
                     var echoModel = ChatTransferModel.FromRecieveModel(json_d);
+                    echoModel.Room = user.Room;
                     MessageSubject.OnNext(echoModel);
                     #endregion
 
@@ -130,6 +132,7 @@ namespace ChatBotWithWS.Services
                     if (commandModel == null) break;
 
                     var transfer = await CommandRunner.GenerateResponse(commandModel);
+                    transfer.Room = user.Room;
                     MessageSubject.OnNext(transfer);
                     #endregion
                     break;

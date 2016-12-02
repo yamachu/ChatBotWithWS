@@ -40,7 +40,7 @@ namespace ChatBotWithWS
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IChatService chat)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -57,22 +57,6 @@ namespace ChatBotWithWS
 
             app.UseStaticFiles();
             app.UseWebSockets();
-
-            chat.DebugLog("Chat Service Instance Created");
-
-            // Will support chat-room
-            app.Map("/Chat", configuration => {
-                configuration.Use(async(context, next) => {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        await chat.HandleConnection(context);
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                });
-            });
 
             app.UseMvc(routes =>
             {
