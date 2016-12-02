@@ -21,3 +21,4 @@ HOST/Chat/Room/{任意文字列} でルームを作成できます．
 ## 小言
 * https://github.com/aspnet/WebSockets/issues/63 で詰まることもあるのでWebSocket使う人は注意
 * テストケースを走らせた時の一回目は必ず失敗する（ライブラリの問題？）
+* Roslyn for Sciptingを使用しているが， .NETCoreAppが1.0.1なら動くけど1.1.0だと動かない...
