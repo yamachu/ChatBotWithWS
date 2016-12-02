@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ChatBotWithWS.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace ChatBotWithWS
 {
@@ -29,11 +30,27 @@ namespace ChatBotWithWS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
+
 
             services.AddSingleton<IChatService, ChatService>();
             services.AddSingleton<ICSXEvalService, CSXEvalService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
+            // services.AddJsEngineSwitcher(options =>
+            //     options.DefaultEngineName = ChakraCoreJsEngine.EngineName
+            // )
+            //     .AddChakraCore()
+            //     .AddMsie(options => {
+            //         options.UseEcmaScript5Polyfill = true;
+            //         options.UseJson2Library = true;
+            //     })
+            //     .AddJint();
+
+            // services.AddReact();
+
+                        // Add framework services.
+            services.AddMvc();
 
             Services = services.BuildServiceProvider();
         }
@@ -55,8 +72,18 @@ namespace ChatBotWithWS
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            
+            // app.UseReact(config => {
+            //     config.DisableServerSideRendering().AddScript("js/wschat.jsx");
+            // });
+            
             app.UseStaticFiles();
+            
             app.UseWebSockets();
+
+            // app.UseReact(config => {
+            //     config.AddScript("~/js/WSChat.jsx");
+            // });
 
             app.UseMvc(routes =>
             {

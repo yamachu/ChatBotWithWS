@@ -26,7 +26,15 @@
     "Newtonsoft.Json": "9.0.1",
     "Microsoft.CodeAnalysis.CSharp.Scripting": "2.0.0-rc",
     "System.Reactive": "3.1.1",
-    "System.Reactive.Linq": "3.1.1"
+    "System.Reactive.Linq": "3.1.1",
+    // this library is buggy... https://github.com/reactjs/React.NET/issues/355
+    "React.AspNet": "3.0.0"
+    // "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection": "2.0.0",
+    // "JavaScriptEngineSwitcher.Core": "2.1.2",
+    // "JavaScriptEngineSwitcher.ChakraCore": "2.1.2",
+    // "JavaScriptEngineSwitcher.Jint": "2.1.2",
+    // "JavaScriptEngineSwitcher.ChakraCore.Native.osx-x64": "2.1.0" // For development
+    // "JavaScriptEngineSwitcher.ChakraCore.Native.debian-x64": "2.1.0" // For docker
   },
 
   "tools": {
